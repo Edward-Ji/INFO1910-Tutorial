@@ -23,6 +23,8 @@ int main(int argc, char const *argv[]) {
     // TEST: string equality
     printf("evaluate: %2d  expect: %2d\n", strequal(string2, "Hello world!"), 0);
     printf("evaluate: %2d  expect: %2d\n", strequal(string2, "Hello!"), 1);
+    printf("evaluate: %2d  expect: %2d\n", strequal(string2, "Hello"), 0);
+    printf("evaluate: %2d  expect: %2d\n", strequal("", ""), 1);
     printf("\n");
 
     char buffer1[] = "**********";

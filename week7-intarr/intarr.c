@@ -76,7 +76,7 @@ void display_2d(int **array, int outer_len, int inner_len) {
 void flatten_2d(int **array_2d, int *array, int outer_len, int inner_len) {
     for (int i = 0; i < outer_len; i++) {
         for (int j = 0; j < inner_len; j++) {
-            *(array + i * inner_len + j) = array_2d[i][j];
+            array[i * inner_len + j] = array_2d[i][j];
         }
     }
 }
@@ -84,7 +84,7 @@ void flatten_2d(int **array_2d, int *array, int outer_len, int inner_len) {
 void unflatten_2d(int **array_2d, int *array, int outer_len, int inner_len) {
     for (int i = 0; i < outer_len; i++) {
         for (int j = 0; j < inner_len; j++) {
-            array_2d[i][j] = *(array + i * inner_len + j);
+            array_2d[i][j] = array[i * inner_len + j];
         }
     }
 }
@@ -106,7 +106,7 @@ void flatten_3d(int ***array_3d, int *array, int dim1_len, int dim2_len, int dim
     for (int i = 0; i < dim1_len; i++) {
         for (int j = 0; j < dim2_len; j++) {
             for (int k = 0; k < dim3_len; k++) {
-                *(array + i * dim2_len * dim3_len + j * dim3_len + k) = array_3d[i][j][k];
+                array[i * dim2_len * dim3_len + j * dim3_len + k] = array_3d[i][j][k];
             }
         }
     }
@@ -116,7 +116,7 @@ void unflatten_3d(int ***array_3d, int *array, int dim1_len, int dim2_len, int d
     for (int i = 0; i < dim1_len; i++) {
         for (int j = 0; j < dim2_len; j++) {
             for (int k = 0; k < dim3_len; k++) {
-                array_3d[i][j][k] = *(array + i * dim2_len * dim3_len + j * dim3_len + k);
+                array_3d[i][j][k] = array[i * dim2_len * dim3_len + j * dim3_len + k];
             }
         }
     }

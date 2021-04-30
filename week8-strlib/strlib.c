@@ -34,14 +34,12 @@ int strfind(const char *str, const char *sub) {
 }
 
 int strequal(const char *str1, const char *str2) {
-    int i = 0;
-    int j = 0;
-    while (str1[i] && str2[j]) {
-        if (str1[i++] != str2[j++]) {
-            return 0;
+    while (*str1++ == *str2++) {
+        if (!*str1 && !*str2) {
+            return 1;
         }
     }
-    return 1;
+    return 0;
 }
 
 void strcopyn(const char *str, char *buf, int buflen) {
