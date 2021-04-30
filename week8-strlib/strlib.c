@@ -54,25 +54,18 @@ void strcopyn(const char *str, char *buf, int buflen) {
 }
 
 void strstrip(const char *str, char *buf, char chr) {
-    const char *pstr = str;
-    char *pbuf = buf;
+    while (*str == chr) str++;
 
-    while (*pstr == chr) {
-        pstr++;
+    const char *end;
+    end = str + strlength(str) - 1;
+    while (*end == chr) end--;
+    end++;
+
+    while (str < end) {
+        *buf++ = *str++;
     }
-    while (*pstr) {
-        *pbuf++ = *pstr++;
-        if (*pstr == chr) {
-            const char *ptmp = pstr;
-            while (*pstr == chr) {
-                pstr++;
-            }
-            if (*pstr) {
-                pstr = ptmp;
-            }
-        }
-    }
-    *pbuf = '\0';
+
+    *buf = '\0';
 }
 
 int strsplit(const char *str, char **arr, char sep) {
