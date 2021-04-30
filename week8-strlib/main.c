@@ -14,21 +14,22 @@ int main(int argc, char const *argv[]) {
     printf("\n");
 
     // TEST: string contains string
-    printf("evaluate: %2d  expect: %2d\n", strinstr(string1, string2), 0);
-    printf("evaluate: %2d  expect: %2d\n", strinstr(string3, string2), 7);
-    printf("evaluate: %2d  expect: %2d\n", strinstr(string2, ""), 0);
+    printf("evaluate: %2d  expect: %2d\n", strfind(string1, string2), -1);
+    printf("evaluate: %2d  expect: %2d\n", strfind(string3, string2), 7);
+    printf("evaluate: %2d  expect: %2d\n", strfind(string2, ""), 0);
+    printf("evaluate: %2d  expect: %2d\n", strfind("", string2), -1);
     printf("\n");
 
     // TEST: string equality
-    printf("evaluate: %2d  expect: %2d\n", streqstr(string2, "Hello world!"), 0);
-    printf("evaluate: %2d  expect: %2d\n", streqstr(string2, "Hello!"), 1);
+    printf("evaluate: %2d  expect: %2d\n", strequal(string2, "Hello world!"), 0);
+    printf("evaluate: %2d  expect: %2d\n", strequal(string2, "Hello!"), 1);
     printf("\n");
 
     char buffer1[] = "**********";
     char buffer2[] = "**********";
 
     // TEST: string copy
-    strcpstr(string1, buffer1, 6);
+    strcopyn(string1, buffer1, 6);
     printf("buffer: %12s  expect: %12s\n", buffer1, "Hello");
     printf("\n");
 
@@ -50,15 +51,18 @@ int main(int argc, char const *argv[]) {
         strarr[i] = malloc(nchar * sizeof(char));
     }
 
-    const char *line = "Hello_world!_We_love_programming_in_C.";
+    const char *line = "Hello_world!__We_love_programming_in_C.";
 
     int nstr;
     nstr = strsplit(line, strarr, '_');
 
-    printf("nstr: %d  expect: %d\n", nstr, 7);
+    printf("nstr: %d  expect: %d\n", nstr, 8);
+    printf("Split result: \n");
     for (int i = 0; i < nstr; i++) {
-        printf("%s\n", strarr[i]);
+        printf("[%d] %s\n", i, strarr[i]);
     }
+
+    printf("\n");
 
     char buffer[100];
 

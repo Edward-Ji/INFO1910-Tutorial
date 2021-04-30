@@ -1,38 +1,39 @@
-#include <stdio.h>
-
 int strlength(const char *str) {
-    unsigned int count = 0;
-    while (str[count]) {
+    int count = 0;
+    while (*(str++)) {
         count++;
     }
     return count;
 }
 
-int strinstr(const char *str, const char *sub) {
-    int i = 0;
-    int j = 0;
+int strfind(const char *str, const char *sub) {
+    const char *pstr = str;
+    const char *psub = sub;
     int match = -1;
 
-    while (str[i]) {
-        if (str[i] == sub[j]) {
+    if (!*psub) {
+        return 0;
+    }
+
+    while (*pstr) {
+        if (*pstr == *psub++) {
             if (match == -1) {
-                match = i;
+                match = (int) (pstr - str);
             }
-            j++;
-            if (!sub[j]) {
+            if (!*psub) {
                 return match;
             }
         } else {
-            j = 0;
+            psub = sub;
             match = -1;
         }
-        i++;
+        pstr++;
     }
 
-    return i?0:-1;
+    return -1;
 }
 
-int streqstr(const char *str1, const char *str2) {
+int strequal(const char *str1, const char *str2) {
     int i = 0;
     int j = 0;
     while (str1[i] && str2[j]) {
@@ -43,7 +44,7 @@ int streqstr(const char *str1, const char *str2) {
     return 1;
 }
 
-void strcpstr(const char *str, char *buf, int buflen) {
+void strcopyn(const char *str, char *buf, int buflen) {
     int i;
     for (i = 0; i < buflen - 1; i++) {
         if (!str[i]) {
@@ -55,20 +56,25 @@ void strcpstr(const char *str, char *buf, int buflen) {
 }
 
 void strstrip(const char *str, char *buf, char chr) {
-    int i = 0, j = 0;
-    while (str[i++] == chr);
-    i--;
-    while(str[i]) {
-        buf[j++] = str[i++];
-        if (str[i] == chr) {
-            int k = i;
-            while (str[i++] == chr);
-            if (str[i]) {
-                i = k;
+    const char *pstr = str;
+    char *pbuf = buf;
+
+    while (*pstr == chr) {
+        pstr++;
+    }
+    while (*pstr) {
+        *pbuf++ = *pstr++;
+        if (*pstr == chr) {
+            const char *ptmp = pstr;
+            while (*pstr == chr) {
+                pstr++;
+            }
+            if (*pstr) {
+                pstr = ptmp;
             }
         }
     }
-    buf[j] = '\0';
+    *pbuf = '\0';
 }
 
 int strsplit(const char *str, char **arr, char sep) {
