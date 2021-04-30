@@ -43,14 +43,13 @@ int strequal(const char *str1, const char *str2) {
 }
 
 void strcopyn(const char *str, char *buf, int buflen) {
-    int i;
-    for (i = 0; i < buflen - 1; i++) {
-        if (!str[i]) {
+    while (--buflen) {
+        if (!*str) {
             break;
         }
-        buf[i] = str[i];
+        *buf++ = *str++;
     }
-    buf[i] = '\0';
+    *buf = '\0';
 }
 
 void strstrip(const char *str, char *buf, char chr) {
