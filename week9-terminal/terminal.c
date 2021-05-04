@@ -5,7 +5,7 @@
 #define BUFFERLEN 1024
 #define ARRAYLEN 16
 
-char *filenames[ARRAYLEN];
+char *dirfiles[ARRAYLEN];
 size_t filecount;
 
 void touch(const char *, const char *);
@@ -15,12 +15,12 @@ void mv(const char *, const char *);
 
 void ls();
 
-void quit();
+void cleanup();
 
 int main(int argc, char const *argv[]) {
 
     for (int i = 0; i < ARRAYLEN; i++) {
-        filenames[i] = (char *) malloc(BUFFERLEN * sizeof(char));
+        dirfiles[i] = (char *) malloc(BUFFERLEN * sizeof(char));
     }
 
     char *buffer = (char *) malloc(BUFFERLEN * sizeof(char));
@@ -44,10 +44,14 @@ int main(int argc, char const *argv[]) {
         } else if (strcmp(command, "ls") == 0) {
             ls();
         } else if (strcmp(command, "exit") == 0) {
-            quit();
-            return 0;
+            cleanup();
+            break;
         }
         buffer = bufhead;
+    }
+
+    for (int i = 0; i < ARRAYLEN; i++) {
+        free(dirfiles[i]);
     }
 
     free(buffer);
@@ -58,7 +62,7 @@ int main(int argc, char const *argv[]) {
 void touch(const char *filename, const char *content) {
     int found = 0;
     for (int i = 0; i < filecount; i++) {
-        if (strcmp(filename, filenames[i]) == 0) {
+        if (strcmp(filename, dirfiles[i]) == 0) {
             found = 1;
         }
     }
@@ -71,7 +75,7 @@ void touch(const char *filename, const char *content) {
             fclose(fp);
         }
 
-        strcpy(filenames[filecount], filename);
+        strcpy(dirfiles[filecount], filename);
         filecount++;
     } else {
         printf("File %s exists.\n", filename);
@@ -93,13 +97,13 @@ void cat(const char *filename) {
 void rm(const char *filename) {
     char found = 0;
     for (int i = 0; i < filecount; i++) {
-        if (strcmp(filename, filenames[i]) == 0) {
+        if (strcmp(filename, dirfiles[i]) == 0) {
             remove(filename);
             filecount--;
             found = 1;
         }
         if (found) {
-            strcpy(filenames[i], filenames[i+1]);
+            strcpy(dirfiles[i], dirfiles[i+1]);
         }
     }
     if (!found) {
@@ -125,12 +129,12 @@ void mv(const char *filename1, const char *filename2) {
 
 void ls() {
     for (int i = 0; i < filecount; i++) {
-        printf("%s \n", filenames[i]);
+        printf("%s \n", dirfiles[i]);
     }
 }
 
-void quit() {
+void cleanup() {
     for (int i = 0; i < filecount; i++) {
-        remove(filenames[i]);
+        remove(dirfiles[i]);
     }
 }
