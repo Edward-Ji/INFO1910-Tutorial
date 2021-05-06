@@ -21,9 +21,14 @@ typedef struct _vfile {
 
 void move_vfile(vfile *vf, vfile *dir) {
     if (vf->parent) {
+        if (dir->type != DIR_TYPE) {
+            printf("Target is not a directory\n");
+        }
         rmv_vfile(vf->parent, vf);
-        add_vfile(vf->parent, vf);
+        add_vfile(dir, vf);
         vf->parent = dir;
+    } else {
+        printf("Root directory can not be moved.\n");
     }
 }
 
@@ -42,7 +47,11 @@ vfile *new_raw(vfile *parent, char *name) {
 
     add_vfile(parent, raw);
     strcpy(raw->name, name);
-    raw->content.text = NULL;
+
+    char *text = (char *) malloc(sizeof(char));
+    *text = '\0';
+    raw->content.text = text;
+
     raw->type = RAW_TYPE;
     raw->count = 0;
 
@@ -50,10 +59,22 @@ vfile *new_raw(vfile *parent, char *name) {
 }
 
 void write_raw(vfile *raw, char *text) {
+    char *rtext = raw->content.text;
+    rtext = realloc(rtext, (strlen(text)+1) * sizeof(char));
+    if (rtext) {
+        strcpy(rtext, text);
+        raw->content.text = rtext;
+    } else {
+        printf("Not enough virtual memory!\n");
+    }
+}
 
+void read_raw(vfile *raw, char *buffer) {
+    strcpy(buffer, raw->content.text);
 }
 
 void del_raw(vfile *raw) {
+    free(raw->content.text);
     free(raw);
 }
 
@@ -69,32 +90,46 @@ vfile *new_dir(vfile *parent, char *name) {
     return dir;
 }
 
-void add_vfile(vfile *dir, vfile *new_file) {
-    vfile **subf = dir->content.subf;
-    size_t count = dir->count;
-
-    vfile **new_subf;
-    new_subf = (vfile **) realloc(subf, (count+1) * sizeof(vfile *));
-    if (new_subf == NULL) {
-        printf("Not enough virtual memory!\n");
-        return;
+void add_vfile(vfile *dir, vfile *vf) {
+    vfile **subf;
+    subf = (vfile **) realloc(dir->content.subf,
+        (++dir->count) * sizeof(vfile *));
+    if (subf) {
+        subf[dir->count-1] = vf;
+        dir->content.subf = subf;
+        vf->parent = dir;
     }
-
-    new_subf[count] = new_file;
-    dir->content.subf = new_subf;
-    dir->count++;
-    new_file->parent = dir;
+    else {
+        printf("Not enough virtual memory!\n");
+    }
 }
 
-void rmv_vfile(vfile *dir, vfile *old_file) {
+void rmv_vfile(vfile *dir, vfile *vf) {
+    vfile **subf = dir->content.subf;
+    int found = 0;
 
+    for (int i = 0; i < dir->count; i++) {
+        if (found) {
+            subf[i-1] = subf[i];
+        } else if (subf[i] == vf) {
+            found = 1;
+        }
+    }
+
+    if (found) {
+        subf = (vfile **) realloc(subf, (--dir->count) * sizeof(vfile *));
+        dir->content.subf = subf;
+        vf->parent = NULL;
+    }
 }
 
 void list_dir(vfile *dir) {
     vfile **subf = dir->content.subf;
-    printf("%zu files in %s\n", dir->count, dir->name);
     for (int i = 0; i < dir->count; i++) {
         printf("%s\t", subf[i]->name);
+    }
+    if (dir->count) {
+        printf("\n");
     }
 }
 
