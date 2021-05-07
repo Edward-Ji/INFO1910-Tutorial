@@ -5,9 +5,6 @@
 
 #define NAME_LEN 256
 
-#define RAW_TYPE 1  // indicate raw text vfile type
-#define DIR_TYPE 2  // indicate directory vfile type
-
 typedef struct _vfile {
     struct _vfile *parent;
     char name[NAME_LEN];
@@ -19,10 +16,39 @@ typedef struct _vfile {
     size_t count;
 } vfile;
 
+vfile *root;
+
+void new_root() {
+    vfile *dir = malloc(sizeof(vfile));
+
+    dir->parent = NULL;
+    strcpy(dir->name, "root");
+    dir->content.subf = NULL;
+    dir->type = DIR_TYPE;
+    dir->count = 0;
+
+    root = dir;
+}
+
+void del_root() {
+    del_dir(root);
+}
+
+void abs_path(vfile *vf) {
+    if (vf->parent) {
+        abs_path(vf->parent);
+    }
+    printf("%s/", vf->name);
+}
+
+char vfile_type(vfile *vf) {
+    return vf->type;
+}
+
 void move_vfile(vfile *vf, vfile *dir) {
     if (vf->parent) {
         if (dir->type != DIR_TYPE) {
-            printf("Target is not a directory\n");
+            printf("Target is not a directory.\n");
         }
         rmv_vfile(vf->parent, vf);
         add_vfile(dir, vf);
@@ -30,6 +56,10 @@ void move_vfile(vfile *vf, vfile *dir) {
     } else {
         printf("Root directory can not be moved.\n");
     }
+}
+
+void rename_vfile(vfile *vf, char *name) {
+    strncpy(vf->name, name, NAME_LEN);
 }
 
 void del_vfile(vfile *vf) {
@@ -133,26 +163,25 @@ void list_dir(vfile *dir) {
     }
 }
 
+vfile *get_vfile(vfile *dir, char *name) {
+    vfile **subf = dir->content.subf;
+    if (strcmp(name, "..") == 0) {
+        if (dir->parent) {
+            return dir->parent;
+        }
+    }
+    for (int i = 0; i < dir->count; i++) {
+        if (strcmp(subf[i]->name, name) == 0) {
+            return subf[i];
+        }
+    }
+    return NULL;
+}
+
 void del_dir(vfile *dir) {
     vfile **subf = dir->content.subf;
     for (int i = 0; i < dir->count; i++) {
         del_vfile(subf[i]);
     }
     free(dir);
-}
-
-vfile *new_root() {
-    vfile *dir = malloc(sizeof(vfile));
-
-    dir->parent = NULL;
-    strcpy(dir->name, "root");
-    dir->content.subf = NULL;
-    dir->type = DIR_TYPE;
-    dir->count = 0;
-
-    return dir;
-}
-
-void del_root(vfile *root) {
-    del_dir(root);
 }
