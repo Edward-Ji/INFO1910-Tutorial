@@ -11,17 +11,27 @@ extern vfile *root;
 
 vfile *cwdir;  // current working directory
 
-void touch(char *fname, char *text) {
-    vfile *raw = new_raw(cwdir, fname);
+void touch(char *name, char *text) {
+    if (name == NULL || text == NULL) {
+        printf("usage: touch <file name> [<text>]\n");
+        return;
+    }
+
+    vfile *raw = new_raw(cwdir, name);
     if (raw && text) {
         write_raw(raw, text);
     }
 }
 
-void cat(char *fname) {
-    vfile *vf = get_vfile(cwdir, fname);
+void cat(char *name) {
+    if (name == NULL) {
+        printf("usage: cat <file name>\n");
+        return;
+    }
+
+    vfile *vf = get_vfile(cwdir, name);
     if (vf == NULL) {
-        printf("Target does not exist!\n");
+        printf("%s does not exist.\n", name);
         return;
     }
     if (vfile_type(vf) == RAW_TYPE) {
@@ -29,20 +39,30 @@ void cat(char *fname) {
         read_raw(vf, buffer);
         printf("%s\n", buffer);
     } else {
-        printf("Target is a not a file.\n");
+        printf("%s is a not a file.\n", name);
     }
 }
 
-void rm(char *fname) {
-    vfile *vf = get_vfile(cwdir, fname);
+void rm(char *name) {
+    if (name == NULL) {
+        printf("usage: rm <file/directory name>\n");
+        return;
+    }
+
+    vfile *vf = get_vfile(cwdir, name);
     if (vf != NULL) {
         del_vfile(vf);
     } else {
-        printf("Target does not exist!\n");
+        printf("%s does not exist.\n", name);
     }
 }
 
 void mv(char *name1, char *name2) {
+    if (name1 == NULL || name2 == NULL) {
+        printf("usage: mv <old name> <new name>\n");
+        return;
+    }
+
     vfile *vf = get_vfile(cwdir, name1);
     if (vf != NULL) {
         rename_vfile(vf, name2);
@@ -50,19 +70,29 @@ void mv(char *name1, char *name2) {
 }
 
 void mkdir(char *name) {
+    if (name == NULL) {
+        printf("usage: mkdir <directory name>\n");
+        return;
+    }
+
     new_dir(cwdir, name);
 }
 
 void rmdir(char *name) {
+    if (name == NULL) {
+        printf("usage: rmdir <directory name>\n");
+        return;
+    }
+
     vfile *vf = get_vfile(cwdir, name);
     if (vf != NULL) {
         if (vfile_type(vf) != DIR_TYPE) {
             del_vfile(vf);
         } else {
-            printf("Target is a not a directory.\n");
+            printf("%s is a not a directory.\n", name);
         }
     } else {
-        printf("Target does not exist!\n");
+        printf("%s does not exist.\n", name);
     }
 }
 
@@ -71,16 +101,21 @@ void ls() {
 }
 
 void cd(char *name) {
+    if (name == NULL) {
+        printf("usage: cd <directory name>\n");
+        return;
+    }
+
     vfile *vf = get_vfile(cwdir, name);
     if (vf != NULL) {
         if (vfile_type(vf) == DIR_TYPE) {
             cwdir = vf;
         } else {
-            printf("Target is a not a directory.\n");
+            printf("%s is a not a directory.\n", name);
         }
     }
     else {
-        printf("Target does not exist!\n");
+        printf("%s does not exist.\n", name);
     }
 }
 
@@ -123,7 +158,7 @@ int main(int argc, char const *argv[]) {
             } else if (strcmp(token, "exit") == 0) {
                 break;
             } else {
-                printf("Command not recognised!\n");
+                printf("Command not recognised.\n");
             }
         }
     }
