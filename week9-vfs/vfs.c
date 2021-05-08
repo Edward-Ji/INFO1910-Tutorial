@@ -58,8 +58,14 @@ void move_vfile(vfile *vf, vfile *dir) {
     }
 }
 
-void rename_vfile(vfile *vf, char *name) {
-    strncpy(vf->name, name, NAME_LEN);
+int rename_vfile(vfile *vf, char *name) {
+    if (strcmp(name, ".") != 0 && strcmp(name, "..") != 0) {
+        strncpy(vf->name, name, NAME_LEN);
+        return 0;
+    } else {
+        printf("%s is reserved.\n", name);
+        return -1;
+    }
 }
 
 void del_vfile(vfile *vf) {
@@ -76,7 +82,9 @@ vfile *new_raw(vfile *parent, char *name) {
     vfile *raw = malloc(sizeof(vfile));
 
     add_vfile(parent, raw);
-    strcpy(raw->name, name);
+    if (rename_vfile(raw, name) != 0) {
+        return NULL;
+    }
 
     char *text = (char *) malloc(sizeof(char));
     *text = '\0';
@@ -104,6 +112,7 @@ void read_raw(vfile *raw, char *buffer) {
 }
 
 void del_raw(vfile *raw) {
+    rmv_vfile(raw->parent, raw);
     free(raw->content.text);
     free(raw);
 }
@@ -112,7 +121,10 @@ vfile *new_dir(vfile *parent, char *name) {
     vfile *dir = malloc(sizeof(vfile));
 
     add_vfile(parent, dir);
-    strcpy(dir->name, name);
+    if (rename_vfile(dir, name) != 0) {
+        return NULL;
+    }
+
     dir->content.subf = NULL;
     dir->type = DIR_TYPE;
     dir->count = 0;
@@ -135,6 +147,10 @@ void add_vfile(vfile *dir, vfile *vf) {
 }
 
 void rmv_vfile(vfile *dir, vfile *vf) {
+    if (!dir) {
+        return;
+    }
+
     vfile **subf = dir->content.subf;
     int found = 0;
 
@@ -165,9 +181,13 @@ void list_dir(vfile *dir) {
 
 vfile *get_vfile(vfile *dir, char *name) {
     vfile **subf = dir->content.subf;
-    if (strcmp(name, "..") == 0) {
+    if (strcmp(name, ".") == 0) {
+        return dir;
+    } else if (strcmp(name, "..") == 0) {
         if (dir->parent) {
             return dir->parent;
+        } else {
+            return dir;  // root
         }
     }
     for (int i = 0; i < dir->count; i++) {
@@ -183,5 +203,6 @@ void del_dir(vfile *dir) {
     for (int i = 0; i < dir->count; i++) {
         del_vfile(subf[i]);
     }
+    rmv_vfile(dir->parent, dir);
     free(dir);
 }

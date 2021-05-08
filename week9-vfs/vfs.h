@@ -13,15 +13,16 @@ void del_root();
 void abs_path(vfile *vf);
 char vfile_type(vfile *vf);
 void move_vfile(vfile *vf, vfile *new_dir);
-void rename_vfile(vfile *vf, char *name);
+int rename_vfile(vfile *vf, char *name);
 void del_vfile(vfile *vf);
 
-// functions certain type of virtual file
+// functions specifically for raw file
 vfile *new_raw(vfile *parent, char *name);
 void write_raw(vfile *raw, char *text);
 void read_raw(vfile *raw, char *buffer);
 void del_raw(vfile *raw);
 
+// functions specifically for directory
 vfile *new_dir(vfile *parent, char *name);
 void add_vfile(vfile *dir, vfile *vf);
 void rmv_vfile(vfile *dir, vfile *vf);
