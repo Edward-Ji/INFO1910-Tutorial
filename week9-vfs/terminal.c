@@ -12,7 +12,7 @@ extern vfile *root;
 vfile *cwdir;  // current working directory
 
 void touch(char *name, char *text) {
-    if (name == NULL || text == NULL) {
+    if (name == NULL) {
         printf("usage: touch <file name> [<text>]\n");
         return;
     }
