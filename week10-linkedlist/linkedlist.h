@@ -14,6 +14,6 @@ char getelem(node *, size_t);
 
 node *insert(node *, node *, size_t);
 
-char popelem(node *, size_t);
+node *popelem(node *, char *, size_t);
 
 node *extend(node *, node *);

@@ -60,7 +60,8 @@ int main(int argc, char const *argv[]) {
     printf("\n");
 
     // pop element
-    char c = popelem(list1, 1);
+    char c;
+    list1 = popelem(list1, &c, 1);
 
     printf("\n popped %c\n", c);
 

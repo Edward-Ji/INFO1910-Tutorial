@@ -73,19 +73,24 @@ node *insert(node *list, node *new, size_t index) {
     return list;
 }
 
-char popelem(node *list, size_t index) {
+node *popelem(node *list, char *ptrc, size_t index) {
     if (index != 0) {
         node *prev;
+        *ptrc = 0;
         while (list != NULL) {
             if (index-- == 0) {
                 prev->next = list->next;
-                return list->elem;
+                *ptrc = prev->elem;
+                break;
             }
             prev = list;
             list = list->next;
         }
+    } else if (list != NULL){
+        *ptrc = list->elem;
+        list = list->next;
     }
-    return (char) 0;
+    return list;
 }
 
 node *extend(node *list1, node *list2) {
