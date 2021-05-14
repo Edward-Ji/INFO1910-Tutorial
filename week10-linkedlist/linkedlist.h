@@ -1,17 +1,19 @@
+#include <stddef.h>
+
 typedef struct _node node;
 
-void make_node(node *, char);
+void set_node(node *, char);
 
-void append(node *, node *);
+node *append(node *, node *);
 
 int length(node *);
 
 int contains(node *, char);
 
-char getelem(node *, int);
+char getelem(node *, size_t);
 
-void insert(node *, node *, int);
+node *insert(node *, node *, size_t);
 
-char popelem(node *, int);
+char popelem(node *, size_t);
 
-void extend(node *, node *);
+node *extend(node *, node *);

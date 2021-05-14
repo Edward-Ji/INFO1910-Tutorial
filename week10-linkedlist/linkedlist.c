@@ -9,18 +9,23 @@ typedef struct _node {
     struct _node *next;
 } node;
 
-void make_node(node *new, char elem) {
+void set_node(node *new, char elem) {
     new->elem = elem;
     new->next = NULL;
 }
 
-void append(node *list, node *new) {
+node *append(node *list, node *new) {
+
+    node *current = list;
     if (list != NULL) {
-        while (list->next != NULL) {
-            list = list->next;
+        while (current->next != NULL) {
+            current = current->next;
         }
-        list->next = new;
+        current->next = new;
+    } else {
+        list = new;
     }
+    return list;
 }
 
 int length(node *list) {
@@ -44,7 +49,7 @@ int contains(node *list, char elem) {
     return -1;
 }
 
-char getelem(node *list, int index) {
+char getelem(node *list, size_t index) {
     while (list != NULL) {
         if (index-- == 0) {
             return list->elem;
@@ -54,18 +59,22 @@ char getelem(node *list, int index) {
     return (char) 0;
 }
 
-void insert(node *list, node *new, int index) {
-    if (list != NULL && index >= 1) {
-        while (--index > 0 && list->next) {
-            list = list->next;
+node *insert(node *list, node *new, size_t index) {
+    node *current = list;
+    if (current != NULL && index != 0) {
+        while (--index > 0 && current->next) {
+            current = current->next;
         }
-        new->next = list->next;
-        list->next = new;
+        new->next = current->next;
+        current->next = new;
+    } else if (index == 0) {
+        list = new;
     }
+    return list;
 }
 
-char popelem(node *list, int index) {
-    if (index >= 1) {
+char popelem(node *list, size_t index) {
+    if (index != 0) {
         node *prev;
         while (list != NULL) {
             if (index-- == 0) {
@@ -79,11 +88,15 @@ char popelem(node *list, int index) {
     return (char) 0;
 }
 
-void extend(node *list1, node *list2) {
-    if (list1 != NULL) {
-        while (list1->next != NULL) {
-            list1 = list1->next;
+node *extend(node *list1, node *list2) {
+    node *current = list1;
+    if (current != NULL) {
+        while (current->next != NULL) {
+            current = current->next;
         }
-        list1->next = list2;
+        current->next = list2;
+    } else {
+        list1 = list2;
     }
+    return list1;
 }
