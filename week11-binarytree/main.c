@@ -37,5 +37,17 @@ int main(int argc, char const *argv[]) {
 
     printf("max size: %d\n", bt_max_layer_size(3));
 
+    printf("Pre-order traversal\n");
+    bt_pre_order(ptr_root);
+    printf("\n");
+
+    printf("In-order traversal\n");
+    bt_in_order(ptr_root);
+    printf("\n");
+
+    printf("Post-order traversal\n");
+    bt_post_order(ptr_root);
+    printf("\n");
+
     return 0;
 }

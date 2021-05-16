@@ -48,3 +48,24 @@ int bt_depth(bt_node *);
  * depth. This function is independent of an actual binary tree.
  */
 int bt_max_layer_size(int);
+
+/*
+ * Given a node, pre-order traverse through its subtree. Visit the current node
+ * first, then pre-order traverse its left child, then pre-order traverse its
+ * right child.
+ */
+void bt_pre_order(bt_node *);
+
+/*
+ * Given a node, in-order traverse through its subtree. First, in-order traverse
+ * its left child, then visit the current node, and in-order traverse its right
+ * child last.
+ */
+void bt_in_order(bt_node *);
+
+/*
+ * Given a node, post-order traverse through its subtree. First, post-order
+ * traverse left child of the current node, then post-order traverse its right
+ * child. Lastly, visit the that node.
+ */
+void bt_post_order(bt_node *);

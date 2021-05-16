@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "bintree.h"
 
 void bt_node_init(bt_node *node, char elem) {
@@ -35,4 +36,28 @@ int bt_max_layer_size(int depth) {
         return 1;
     }
     return 2 * bt_max_layer_size(depth - 1);
+}
+
+void bt_pre_order(bt_node *node) {
+    if (node != NULL) {
+        printf("%c ", node->elem);
+        bt_pre_order(node->left_child);
+        bt_pre_order(node->right_child);
+    }
+}
+
+void bt_in_order(bt_node *node) {
+    if (node != NULL) {
+        bt_in_order(node->left_child);
+        printf("%c ", node->elem);
+        bt_in_order(node->right_child);
+    }
+}
+
+void bt_post_order(bt_node *node) {
+    if (node != NULL) {
+        bt_post_order(node->left_child);
+        bt_post_order(node->right_child);
+        printf("%c ", node->elem);
+    }
 }
