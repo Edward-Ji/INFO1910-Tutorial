@@ -72,20 +72,10 @@ void bt_fbs(bt_node *root) {
         fringe[i] = NULL;
     }
 
-<<<<<<< HEAD
     while (fringe[0] != NULL) {
         // take out the first node in fringe
         int i = 0;
         bt_node *current = fringe[0];
-=======
-    int i;
-    bt_node *current;
-
-    while (fringe[0] != NULL) {
-        // take out the first node in fringe
-        i = 0;
-        current = fringe[0];
->>>>>>> c6a9f5e45e1497eec69df918c901414993163106
 
         while (i < max_layer_size && fringe[i] != NULL) {
             fringe[i] = fringe[i+1];
