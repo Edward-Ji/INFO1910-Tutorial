@@ -50,6 +50,13 @@ int bt_depth(bt_node *);
 int bt_max_layer_size(int);
 
 /*
+ * ================================ Traversal ================================
+ *
+ * In this library, to visit a node means printing out its element as a
+ * character.
+ */
+
+/*
  * Given a node, pre-order traverse through its subtree. Visit the current node
  * first, then pre-order traverse its left child, then pre-order traverse its
  * right child.
@@ -69,3 +76,14 @@ void bt_in_order(bt_node *);
  * child. Lastly, visit the that node.
  */
 void bt_post_order(bt_node *);
+
+/*
+ * Given a node, perform a breath first search on its branch. Breath first
+ * search works by keeping a list of nodes called fringe, and performing the
+ * following steps:
+ * (1) Put the root node in the fringe;
+ * (2) Remove the first node from the fringe and visit it;
+ * (3) Add all the children of the node in step (2) to the end of the fringe;
+ * (4) Repeat steps (2) and (3) until the fringe is empty.
+ */
+ void bt_fbs(bt_node *);
